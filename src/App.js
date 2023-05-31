@@ -1,7 +1,23 @@
 import logo from './logo.svg';
 import './App.css';
+import { useEffect, useState } from 'react';
+
+const API_USERS_URL = process.env.REACT_APP_API_ENDPOINT + '/users'
 
 function App() {
+  const [users, setUsers] = useState([])
+
+  const fetchUserData = () => {
+    fetch(API_USERS_URL)
+      .then(response => response.json())
+      .then(data => setUsers(data))
+      .catch(console.error)
+  }
+
+  useEffect(() => {
+    fetchUserData()
+  }, [])
+
   return (
     <div className="App">
       <header className="App-header">
@@ -18,6 +34,17 @@ function App() {
           Learn React
         </a>
       </header>
+
+      <div>
+        {users.length > 0 && (
+          <ul>
+            <h2>Get from {API_USERS_URL}</h2>
+            {users.map(user => (
+              <li key={user.id}>{user.name}</li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }
